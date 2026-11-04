@@ -121,12 +121,12 @@ docker run -d --name opencode2api \
   opencode2api:local
 ```
 
-Nella radice del repository, `deploy.ps1` costruisce e gestisce un container locale:
+Nella radice del repository, `deploy.sh` costruisce e gestisce un container locale:
 
-```powershell
-.\deploy.ps1 start     # avvia; costruisce l'immagine locale se manca
-.\deploy.ps1 restart   # ricostruisce l'immagine e ricrea il container
-.\deploy.ps1 stop      # ferma il container e conserva il volume
+```sh
+./deploy.sh start     # avvia; costruisce l'immagine locale se manca
+./deploy.sh restart   # ricostruisce l'immagine e ricrea il container
+./deploy.sh stop      # ferma il container e conserva il volume
 ```
 
 `start` e `restart` caricano anche `compose.local.yaml`, che costruisce `opencode2api:local` da questo repository invece di scaricare l'immagine pubblicata. Se manca `config.json`, lo script copia `config.example.json`.

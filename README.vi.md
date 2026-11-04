@@ -123,12 +123,12 @@ docker run -d --name opencode2api \
   opencode2api:local
 ```
 
-Thư mục gốc của repository có `deploy.ps1` để dựng và quản lý container cục bộ:
+Thư mục gốc của repository có `deploy.sh` để dựng và quản lý container cục bộ:
 
-```powershell
-.\deploy.ps1 start     # khởi động; dựng image cục bộ nếu chưa có
-.\deploy.ps1 restart   # dựng lại image và tạo lại container
-.\deploy.ps1 stop      # dừng container và giữ volume dữ liệu
+```sh
+./deploy.sh start     # khởi động; dựng image cục bộ nếu chưa có
+./deploy.sh restart   # dựng lại image và tạo lại container
+./deploy.sh stop      # dừng container và giữ volume dữ liệu
 ```
 
 `start` và `restart` còn nạp `compose.local.yaml`, dùng Dockerfile của repository này để dựng `opencode2api:local` thay vì kéo image đã phát hành. Nếu chưa có `config.json`, script sẽ sao chép `config.example.json`.

@@ -121,12 +121,12 @@ docker run -d --name opencode2api \
   opencode2api:local
 ```
 
-仓库根目录的 `deploy.ps1` 用来在本地构建并管理容器：
+仓库根目录的 `deploy.sh` 用来在本地构建并管理容器：
 
-```powershell
-.\deploy.ps1 start     # 启动；本地镜像不存在时先构建
-.\deploy.ps1 restart   # 重新构建镜像并重建容器
-.\deploy.ps1 stop      # 停止容器，保留数据卷
+```sh
+./deploy.sh start     # 启动；本地镜像不存在时先构建
+./deploy.sh restart   # 重新构建镜像并重建容器
+./deploy.sh stop      # 停止容器，保留数据卷
 ```
 
 `start` 和 `restart` 会额外加载 `compose.local.yaml`，使用当前仓库构建 `opencode2api:local`，而不是拉取已发布镜像。如果还没有 `config.json`，脚本会从 `config.example.json` 复制一份。

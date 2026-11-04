@@ -121,12 +121,12 @@ docker run -d --name opencode2api \
   opencode2api:local
 ```
 
-The repository root includes `deploy.ps1` for building and managing a local container:
+The repository root includes `deploy.sh` for building and managing a local container:
 
-```powershell
-.\deploy.ps1 start     # start; build first when the local image is missing
-.\deploy.ps1 restart   # rebuild the image and recreate the container
-.\deploy.ps1 stop      # stop the container and keep the data volume
+```sh
+./deploy.sh start     # start; build first when the local image is missing
+./deploy.sh restart   # rebuild the image and recreate the container
+./deploy.sh stop      # stop the container and keep the data volume
 ```
 
 `start` and `restart` also load `compose.local.yaml`, which builds `opencode2api:local` from this repository instead of pulling the published image. If `config.json` is missing, the script copies `config.example.json`.

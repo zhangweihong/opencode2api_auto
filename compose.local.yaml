@@ -1,4 +1,4 @@
-# 仅供 deploy.ps1 使用。文件名不是 compose.override.yaml，因此普通 docker compose 不会自动加载它。
+# 仅供 deploy.sh 使用。文件名不是 compose.override.yaml，因此普通 docker compose 不会自动加载它。
 # 覆盖 compose.yaml 中的远程镜像：用当前仓库的 Dockerfile 构建 opencode2api:local，并且不再拉取远程标签。
 services:
   opencode2api:
