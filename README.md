@@ -99,8 +99,8 @@ WARP needs only outbound UDP (Cloudflare endpoint port `2408`), so the image's n
 | Compose variable            | Default  | Effect                                            |
 | --------------------------- | -------- | ------------------------------------------------- |
 | `OPENCODE2API_VERSION`      | `latest` | Image tag. Pin a release tag for a fixed version. |
-| `OPENCODE2API_PORT`         | `8080`   | Host port mapped to container port 8080.          |
-| `OPENCODE2API_WEBUI_PORT`   | `8081`   | Host port mapped to container port 8081.          |
+| `OPENCODE2API_PORT`         | `9090`   | Host port mapped to container port 8080.          |
+| `OPENCODE2API_WEBUI_PORT`   | `9091`   | Host port mapped to container port 8081.          |
 | `OPENCODE2API_LISTEN`       | Unset    | Explicit container API listen override.           |
 | `OPENCODE2API_WEBUI_LISTEN` | Unset    | Explicit container WebUI listen override.         |
 
@@ -114,12 +114,22 @@ For a local image:
 docker build -t opencode2api:local .
 docker volume create opencode2api-state
 docker run -d --name opencode2api \
-  -p 8080:8080 -p 8081:8081 \
+  -p 9090:8080 -p 9091:8081 \
   -e CONFIG_SEED_PATH=/run/config/opencode2api.json \
   -v "$(pwd)/config.json:/run/config/opencode2api.json:ro" \
   -v opencode2api-state:/var/lib/opencode2api \
   opencode2api:local
 ```
+
+The repository root includes `deploy.ps1` for building and managing a local container:
+
+```powershell
+.\deploy.ps1 start     # start; build first when the local image is missing
+.\deploy.ps1 restart   # rebuild the image and recreate the container
+.\deploy.ps1 stop      # stop the container and keep the data volume
+```
+
+`start` and `restart` also load `compose.local.yaml`, which builds `opencode2api:local` from this repository instead of pulling the published image. If `config.json` is missing, the script copies `config.example.json`.
 
 A `proxyfile` used in Docker must also be available inside the container at the configured path.
 

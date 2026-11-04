@@ -99,8 +99,8 @@ WARP 只需要出站 UDP（Cloudflare 端点端口 `2408`），因此镜像的�
 | Compose 环境变量            | 默认值   | 作用                                 |
 | --------------------------- | -------- | ------------------------------------ |
 | `OPENCODE2API_VERSION`      | `latest` | 镜像标签；可指定发行标签来固定版本。 |
-| `OPENCODE2API_PORT`         | `8080`   | 映射到容器 8080 的宿主机端口。       |
-| `OPENCODE2API_WEBUI_PORT`   | `8081`   | 映射到容器 8081 的宿主机端口。       |
+| `OPENCODE2API_PORT`         | `9090`   | 映射到容器 8080 的宿主机端口。       |
+| `OPENCODE2API_WEBUI_PORT`   | `9091`   | 映射到容器 8081 的宿主机端口。       |
 | `OPENCODE2API_LISTEN`       | 未设置   | 显式覆盖容器内 API 监听地址。        |
 | `OPENCODE2API_WEBUI_LISTEN` | 未设置   | 显式覆盖容器内 WebUI 监听地址。      |
 
@@ -114,12 +114,22 @@ WARP 只需要出站 UDP（Cloudflare 端点端口 `2408`），因此镜像的�
 docker build -t opencode2api:local .
 docker volume create opencode2api-state
 docker run -d --name opencode2api \
-  -p 8080:8080 -p 8081:8081 \
+  -p 9090:8080 -p 9091:8081 \
   -e CONFIG_SEED_PATH=/run/config/opencode2api.json \
   -v "$(pwd)/config.json:/run/config/opencode2api.json:ro" \
   -v opencode2api-state:/var/lib/opencode2api \
   opencode2api:local
 ```
+
+仓库根目录的 `deploy.ps1` 用来在本地构建并管理容器：
+
+```powershell
+.\deploy.ps1 start     # 启动；本地镜像不存在时先构建
+.\deploy.ps1 restart   # 重新构建镜像并重建容器
+.\deploy.ps1 stop      # 停止容器，保留数据卷
+```
+
+`start` 和 `restart` 会额外加载 `compose.local.yaml`，使用当前仓库构建 `opencode2api:local`，而不是拉取已发布镜像。如果还没有 `config.json`，脚本会从 `config.example.json` 复制一份。
 
 在 Docker 中使用 `proxyfile` 时，代理文件也需要挂载到容器内配置指定的位置。
 

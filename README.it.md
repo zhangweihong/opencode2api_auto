@@ -99,8 +99,8 @@ WARP richiede solo UDP in uscita (endpoint Cloudflare, porta `2408`), quindi la 
 | Variabile Compose           | Predefinito | Effetto                                                    |
 | --------------------------- | ----------- | ---------------------------------------------------------- |
 | `OPENCODE2API_VERSION`      | `latest`    | Tag dell'immagine; fissa un tag di release per una versione precisa. |
-| `OPENCODE2API_PORT`         | `8080`      | Porta host mappata alla porta 8080 del container.          |
-| `OPENCODE2API_WEBUI_PORT`   | `8081`      | Porta host mappata alla porta 8081 del container.          |
+| `OPENCODE2API_PORT`         | `9090`      | Porta host mappata alla porta 8080 del container.          |
+| `OPENCODE2API_WEBUI_PORT`   | `9091`      | Porta host mappata alla porta 8081 del container.          |
 | `OPENCODE2API_LISTEN`       | Non impostata | Sostituisce esplicitamente l'ascolto API nel container.   |
 | `OPENCODE2API_WEBUI_LISTEN` | Non impostata | Sostituisce esplicitamente l'ascolto WebUI nel container. |
 
@@ -114,12 +114,22 @@ Per creare un'immagine locale:
 docker build -t opencode2api:local .
 docker volume create opencode2api-state
 docker run -d --name opencode2api \
-  -p 8080:8080 -p 8081:8081 \
+  -p 9090:8080 -p 9091:8081 \
   -e CONFIG_SEED_PATH=/run/config/opencode2api.json \
   -v "$(pwd)/config.json:/run/config/opencode2api.json:ro" \
   -v opencode2api-state:/var/lib/opencode2api \
   opencode2api:local
 ```
+
+Nella radice del repository, `deploy.ps1` costruisce e gestisce un container locale:
+
+```powershell
+.\deploy.ps1 start     # avvia; costruisce l'immagine locale se manca
+.\deploy.ps1 restart   # ricostruisce l'immagine e ricrea il container
+.\deploy.ps1 stop      # ferma il container e conserva il volume
+```
+
+`start` e `restart` caricano anche `compose.local.yaml`, che costruisce `opencode2api:local` da questo repository invece di scaricare l'immagine pubblicata. Se manca `config.json`, lo script copia `config.example.json`.
 
 Anche il file `proxyfile` usato in Docker deve essere presente nel container al percorso configurato.
 

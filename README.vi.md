@@ -101,8 +101,8 @@ WARP chỉ cần UDP ra ngoài (endpoint Cloudflare, cổng `2408`), nên thiế
 | Biến Compose                     | Mặc định  | Tác dụng                                                    |
 | -------------------------------- | --------- | ----------------------------------------------------------- |
 | `OPENCODE2API_VERSION`           | `latest`  | Tag image. Ghim tag release khi cần phiên bản cố định.       |
-| `OPENCODE2API_PORT`              | `8080`    | Cổng host ánh xạ tới cổng 8080 của container.                |
-| `OPENCODE2API_WEBUI_PORT`        | `8081`    | Cổng host ánh xạ tới cổng 8081 của container.                |
+| `OPENCODE2API_PORT`              | `9090`    | Cổng host ánh xạ tới cổng 8080 của container.                |
+| `OPENCODE2API_WEBUI_PORT`        | `9091`    | Cổng host ánh xạ tới cổng 8081 của container.                |
 | `OPENCODE2API_LISTEN`            | Không đặt | Ghi đè rõ ràng địa chỉ lắng nghe API trong container.        |
 | `OPENCODE2API_WEBUI_LISTEN`      | Không đặt | Ghi đè rõ ràng địa chỉ lắng nghe WebUI trong container.      |
 
@@ -116,12 +116,22 @@ Build image cục bộ:
 docker build -t opencode2api:local .
 docker volume create opencode2api-state
 docker run -d --name opencode2api \
-  -p 8080:8080 -p 8081:8081 \
+  -p 9090:8080 -p 9091:8081 \
   -e CONFIG_SEED_PATH=/run/config/opencode2api.json \
   -v "$(pwd)/config.json:/run/config/opencode2api.json:ro" \
   -v opencode2api-state:/var/lib/opencode2api \
   opencode2api:local
 ```
+
+Thư mục gốc của repository có `deploy.ps1` để dựng và quản lý container cục bộ:
+
+```powershell
+.\deploy.ps1 start     # khởi động; dựng image cục bộ nếu chưa có
+.\deploy.ps1 restart   # dựng lại image và tạo lại container
+.\deploy.ps1 stop      # dừng container và giữ volume dữ liệu
+```
+
+`start` và `restart` còn nạp `compose.local.yaml`, dùng Dockerfile của repository này để dựng `opencode2api:local` thay vì kéo image đã phát hành. Nếu chưa có `config.json`, script sẽ sao chép `config.example.json`.
 
 `proxyfile` dùng trong Docker cũng phải tồn tại bên trong container tại đường dẫn đã cấu hình.
 
